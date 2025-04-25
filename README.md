@@ -15,7 +15,6 @@ The dashboard contains two interactive visualizations:
 ## 🔗 Live Dashboard
 
 👉 [Click here to view the dashboard](https://bingokie.github.io/Data555/dashborad.html)
-*(Make sure GitHub Pages is enabled and this file is in your repo root or `docs/` folder)*
 
 ## 📁 Files in This Repository
 
