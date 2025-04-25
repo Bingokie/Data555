@@ -1,0 +1,116 @@
+---
+title: "Maternal and Neonatal Health Dashboard"
+author: "Bingbing Wu"
+date: "2025-04-25"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: column
+    vertical_layout: scroll
+    theme: flatly
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+library(dplyr)
+library(plotly)
+```
+
+Column {data-width=250}
+-----------------------------------------------------------------------
+
+### Overview
+
+This dashboard displays interactive visualizations exploring how maternal factors (such as BMI) relate to neonatal outcomes (such as birth weight and preterm classification). Use the widgets to interact with the data and interpret trends.
+
+---
+
+### Dataset Information {.tabset}
+
+#### Description
+
+- **Source**: Research dataset on maternal and infant health  
+- **Sample Size**: 3000+ 
+- **Collected via**: Clinical visits and electronic health records  
+- **Population**: Pregnant individuals and their newborns
+
+#### Variables Used
+
+- `mother_bmi`: Mother's body mass index  
+- `baby_birth_weight`: Newborn's weight in kilograms  
+- `preterm_group`: Classification of prematurity  
+- `Sex`: Infant's biological sex  
+- `mother_age1`: Mother's age
+
+---
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Impact of Maternal BMI on Baby Birth Weight
+
+```{r}
+# Load the dataset
+pheno_data <- read.csv("/Users/bingbing/Desktop/Emory/24spring/Data555/HW/finalproejct3a/Pheno_with_Cell_Types.csv")
+
+# Scatter plot: Maternal BMI vs. Baby Birth Weight
+plot1 <- plot_ly(data = pheno_data, type = 'scatter', mode = 'markers',
+                 x = ~mother_bmi, 
+                 y = ~baby_birth_weight,
+                 color = ~Sex, 
+                 text = ~paste("Mother Age:", mother_age1, 
+                               "<br>Birth Weight:", round(baby_birth_weight, 2), "kg"),
+                 hoverinfo = "text",
+                 marker = list(size = 10)) %>%
+  layout(title = "Impact of Maternal BMI on Baby Birth Weight",
+         xaxis = list(title = "Mother BMI"),
+         yaxis = list(title = "Baby Birth Weight (kg)"),
+         hovermode = "closest")
+
+plot1
+```
+
+**Key Takeaways**  
+- Higher maternal BMI tends to be associated with higher birth weight.  
+- This relationship may reflect nutritional or metabolic effects during pregnancy.
+
+---
+
+
+### Average Baby Birth Weight by Preterm Group
+
+```{r}
+# Ensure preterm_group is treated as factor
+pheno_data$preterm_group <- factor(pheno_data$preterm_group)
+
+# Summarize average weight
+avg_bw <- pheno_data %>%
+  group_by(preterm_group) %>%
+  summarise(avg_weight = mean(baby_birth_weight, na.rm = TRUE))
+
+# Bar chart
+plot2 <- plot_ly(data = avg_bw, x = ~preterm_group, y = ~avg_weight, type = 'bar',
+                 color = ~preterm_group,
+                 text = ~paste("Average Weight:", round(avg_weight, 2), "kg"),
+                 hoverinfo = "text") %>%
+  layout(title = "Average Baby Birth Weight by Preterm Group",
+         xaxis = list(title = "Preterm Group"),
+         yaxis = list(title = "Average Birth Weight (kg)"),
+         barmode = 'group')
+
+plot2
+```
+
+Column {data-width=250}
+-----------------------------------------------------------------------
+**Key Takeaways**  
+Infants born in more premature groups—such as extremely or very preterm—tend to have significantly lower average birth weights. This observation underscores their increased vulnerability and the heightened likelihood of complications such as respiratory distress, temperature instability, and developmental delays. By visualizing birth weight trends across prematurity classifications, this chart helps prioritize which subgroups require enhanced clinical surveillance, resource allocation, and targeted interventions in neonatal intensive care units (NICUs). It also reinforces the importance of preventive strategies to reduce preterm birth rates.
+
+---
+
+### Real-World Relevance
+
+Understanding maternal health patterns helps clinicians design personalized care strategies and support optimal outcomes for both mothers and infants.
+
+---
+[Github Repository](https://github.com/Bingokie/Data555) 
