@@ -14,7 +14,7 @@ The dashboard contains two interactive visualizations:
 
 ## 🔗 Live Dashboard
 
-👉 [Click here to view the dashboard](https://bingokie.github.io/Data555/dashboard.html)
+👉 [Click here to view the dashboard](https://bingokie.github.io/Data555/dashborad.html)
 
 ## 📁 Files in This Repository
 
